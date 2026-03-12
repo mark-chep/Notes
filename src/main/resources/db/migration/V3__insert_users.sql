@@ -1,4 +1,4 @@
 INSERT INTO users (username, password, role, enabled)
 VALUES ('user',
-        '$2a$12$V8zXT84E8n/HELZ.rTjIdu3mZVxe7E1cqdK8.t9hOGuxqD2qUgZee',
+        '$2a$10$ByIUiNa.nNoer8u6E1Z29u.yT6v7mK9A7Ld4B3jYd.D1Gj0vU9GqO',
         'user', 1);
