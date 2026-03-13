@@ -1,6 +1,3 @@
 DELETE FROM users;
-
 INSERT INTO users (username, password, role, enabled)
-VALUES ('user', 
-        '$2a$10$ByIUiNa.nNoer8u6E1Z29u.yT6v7mK9A7Ld4B3jYd.D1Gj0vU9GqO', 
-        'ROLE_USER', 1);
+VALUES ('user', '$2a$10$PoMFUnZjp642FXrWnmlw5e8JdfdfyTIDMSP6.OxqsRhV/s2nn7oJq', 'user', 1);

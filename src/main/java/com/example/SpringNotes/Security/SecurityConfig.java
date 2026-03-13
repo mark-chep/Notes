@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
 import javax.sql.DataSource;
 
 @Configuration
@@ -22,25 +23,24 @@ public class SecurityConfig {
     @Bean
     public JdbcUserDetailsManager userDetailsManager(DataSource dataSource) {
         JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
-        manager.setUsersByUsernameQuery("select username, password, enabled from users where username=?");
-        manager.setAuthoritiesByUsernameQuery("select username, role from users where username=?");
+        manager.setUsersByUsernameQuery("SELECT username, password, enabled FROM users WHERE username=?");
+        manager.setAuthoritiesByUsernameQuery("SELECT username, role FROM users WHERE username=?");
         return manager;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .headers(headers -> headers.frameOptions(frame -> frame.disable()))
-            .authorizeHttpRequests(auth -> auth
-                .anyRequest().authenticated()
-            )
-            .formLogin(form -> form
-                .defaultSuccessUrl("/notes", true)
-                .permitAll()
-            )
-            .logout(logout -> logout.permitAll());
-        
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .defaultSuccessUrl("/note/list", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout.permitAll());
+
         return http.build();
     }
 }
