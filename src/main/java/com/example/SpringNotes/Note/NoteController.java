@@ -1,62 +1,59 @@
 package com.example.SpringNotes.Note;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/note")
 public class NoteController {
     private final NoteService noteService;
-    @GetMapping(value = "/list" )
+
+    @GetMapping("/")
+    public String index(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            return "redirect:/note/list";
+        }
+        return "redirect:/login";
+    }
+
+    @GetMapping(value = "/note/list" )
     public ModelAndView getList() {
         ModelAndView modelAndView = new ModelAndView("note");
         modelAndView.addObject("notes", noteService.listAll());
         return modelAndView;
     }
 
-    @GetMapping(value = "/create")
+    @GetMapping(value = "/note/create")
     public String createNote() {
-        return ("create-note");
+        return "create-note";
     }
 
-    @PostMapping(value = "/create")
-    public RedirectView create(@ModelAttribute Note note) {
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("/note/list");
+    @PostMapping(value = "/note/create")
+    public String create(@ModelAttribute Note note) {
         noteService.add(note);
-        return redirectView;
+        return "redirect:/note/list";
     }
 
-
-
-    @GetMapping(value = "/edit")
+    @GetMapping(value = "/note/edit")
     public String editNote(Model model, @RequestParam int id) {
         Note note = noteService.getById(id);
         model.addAttribute("note" , note);
-        return ("edit-note");
+        return "edit-note";
     }
-    @PostMapping(value = "/edit")
-    public RedirectView edit(@ModelAttribute Note note) {
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("/note/list");
+
+    @PostMapping(value = "/note/edit")
+    public String edit(@ModelAttribute Note note) {
         noteService.update(note);
-        return redirectView;
+        return "redirect:/note/list";
     }
 
-
-    @PostMapping("/delete")
-    public RedirectView delete(@RequestParam int id) {
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("/note/list");
+    @PostMapping("/note/delete")
+    public String delete(@RequestParam int id) {
         noteService.deleteById(id);
-        return redirectView;
+        return "redirect:/note/list";
     }
-
-
-
 }
